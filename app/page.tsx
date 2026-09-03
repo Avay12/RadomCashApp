@@ -598,10 +598,12 @@ function MainApp() {
               <input
                 type="text"
                 id="username"
+                name="username"
                 className="login-input"
                 value={loginUser}
                 onChange={(e) => setLoginUser(e.target.value)}
                 placeholder="Enter assigned username"
+                autoComplete="username"
                 required
               />
             </div>
@@ -612,10 +614,12 @@ function MainApp() {
                 <input
                   type={showPass ? 'text' : 'password'}
                   id="password"
+                  name="password"
                   className="login-input"
                   value={loginPass}
                   onChange={(e) => setLoginPass(e.target.value)}
                   placeholder="Enter password"
+                  autoComplete="current-password"
                   required
                 />
                 <button
@@ -1253,25 +1257,28 @@ function MainApp() {
 
       {/* SCREEN 6: CONFIRMATION MODAL */}
       {showConfirmModal && (
-        <div className="dialog-backdrop">
-          <div className="confirm-dialog-card">
-            <div className="celebration-badge">
-              <div className="confetti-sparkles">
-                <span className="sparkle s1">✨</span>
-                <span className="coin-center-float">
-                  <span className="tiktok-coin-icon-gold xl"></span>
-                </span>
-                <span className="sparkle s2">🎉</span>
-              </div>
+        <div className="dialog-overlay open" id="confirmDialog" onClick={() => setShowConfirmModal(false)}>
+          <div className="dialog-box" onClick={(e) => e.stopPropagation()}>
+            <div className="dialog-icon-container">
+              <img src="/coin.png" alt="Coin" className="dialog-main-coin" id="dialogMainCoinImg" />
             </div>
-
-            <h3 className="confirm-modal-heading">Complete exchange for {confirmDetails.coins.toLocaleString('en-US')} Coins?</h3>
-            <p className="confirm-modal-sub">${confirmDetails.usd.toFixed(2)} will be deducted from estimated LIVE rewards</p>
-
-            <div className="confirm-modal-actions">
-              <button className="btn-dialog-back" onClick={() => setShowConfirmModal(false)}>Go back</button>
-              <button className="btn-dialog-complete" onClick={handleExecuteExchange}>
-                {isCompletingExchange ? 'Processing...' : 'Complete'}
+            <div className="dialog-title" id="dialogTitleText">
+              Complete exchange for {confirmDetails.coins.toLocaleString('en-US')} Coins?
+            </div>
+            <div className="dialog-msg" id="dialogMsgText">
+              ${confirmDetails.usd.toFixed(2)} will be deducted from estimated LIVE rewards
+            </div>
+            <div className="dialog-actions">
+              <button className="dialog-btn dialog-btn-cancel" id="cancelDialogBtn" onClick={() => setShowConfirmModal(false)}>
+                Go back
+              </button>
+              <button
+                className="dialog-btn dialog-btn-confirm"
+                id="finalExchangeBtn"
+                onClick={handleExecuteExchange}
+                disabled={isCompletingExchange}
+              >
+                {isCompletingExchange ? 'Completing...' : 'Complete'}
               </button>
             </div>
           </div>
