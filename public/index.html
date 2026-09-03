@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Coin Exchanger & LIVE Rewards</title>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app" class="app-root">
+    
+    <!-- SCREEN 1: LOGIN PAGE -->
+    <div id="screen-login" class="screen active">
+      <div class="login-bg-glow"></div>
+      <div class="login-card">
+        <div class="login-header">
+          <div class="tiktok-logo-box">
+            <svg class="tiktok-svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.86-4.47V8.69a8.18 8.18 0 0 0 4.91 1.63V6.87a4.9 4.9 0 0 1-1-.18z"/>
+            </svg>
+          </div>
+          <button id="btn-login-settings" class="icon-btn-settings" title="Display Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="login-badge">SECURE EXCHANGE ACCESS</div>
+        <h1 class="login-title">Coin Exchanger</h1>
+        <p class="login-desc">Sign in to your exchange workspace. Your account is protected by administrator-managed timed access.</p>
+
+        <form id="login-form" class="login-form" onsubmit="event.preventDefault(); handleLogin();">
+          <div class="form-group">
+            <label for="username">USERNAME</label>
+            <input type="text" id="username" class="login-input" value="admin" autocomplete="username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">PASSWORD</label>
+            <div class="password-wrap">
+              <input type="password" id="password" class="login-input" value="••••••••" autocomplete="current-password" required>
+              <button type="button" id="btn-toggle-pwd" class="btn-pwd-eye">
+                <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-login-submit" class="btn-login-emerald">Log in</button>
+        </form>
+
+        <div class="login-footer-alerts">
+          <p class="session-alert">Your session ended. Please sign in again.</p>
+          <a href="#" class="contact-admin-link" onclick="handleContactAdmin(event)">Contact admin</a>
+          <p class="custom-hint">Use the gear to customize your exchange display</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- APP CONTAINER (Mobile Frame for Screens 2 & 3) -->
+    <div id="screen-app-container" class="screen">
+      <div class="phone-frame">
+
+        <!-- SCREEN 2: LIVE REWARDS -->
+        <div id="view-rewards" class="app-view active">
+          <!-- Top Navigation -->
+          <div class="view-navbar">
+            <button class="nav-back-btn" onclick="navigateToScreen('screen-login')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <h2 class="nav-title">LIVE rewards</h2>
+            <button class="nav-settings-btn" onclick="openSettingsModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Scrollable Content -->
+          <div class="view-scroll-content">
+            <!-- Scaled LIVE Rewards Banner -->
+            <div id="scaled-rewards-banner" class="banner-card">
+              <div class="banner-top">
+                <h3 class="banner-title">Say hi to Scaled LIVE Rewards</h3>
+                <button class="banner-close" onclick="closeBanner()">✕</button>
+              </div>
+              <p class="banner-text">Your dedication to quality content could get you a rewards percentage of up to 53%.</p>
+              <a href="#" class="banner-link" onclick="event.preventDefault()">Learn more</a>
+            </div>
+
+            <!-- Two Column Stats Cards -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-label">Available rewards</span>
+                <span class="stat-value display-balance-usd">$8,573,020.22</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">Upcoming rewards</span>
+                <span class="stat-value display-upcoming-usd">$167,290.62</span>
+              </div>
+            </div>
+
+            <!-- Big Available Rewards Balance -->
+            <div class="hero-balance-section">
+              <span class="hero-balance-label">Available rewards</span>
+              <div class="hero-balance-val display-balance-usd">$8,573,020.22</div>
+              <div class="hero-balance-sub">
+                = <span class="display-balance-usd">$8,573,020.22</span>
+                <span class="coin-sub-box">
+                  ( <span class="tiktok-coin-icon-gold"></span> <span class="display-balance-coins">706,416,866</span> )
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions-section">
+              <button id="btn-goto-exchange" class="btn-primary-tiktok" onclick="openExchangeView()">Exchange</button>
+              <button id="btn-goto-withdraw" class="btn-secondary-tiktok" onclick="openWithdrawModal()">Withdraw</button>
+            </div>
+
+            <!-- Daily withdrawal limit -->
+            <div class="withdrawal-limit-note">
+              Daily withdrawal limit (Remain/Total): $1,000/$1,000
+            </div>
+
+            <!-- Transactions Section -->
+            <div class="transactions-section">
+              <div class="tx-header">
+                <h3 class="tx-heading">Transactions</h3>
+                <div class="tx-dropdown">
+                  <span>Jun 2026</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div id="tx-list" class="tx-list">
+                <!-- Dynamically populated from JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SCREEN 3: EXCHANGE -->
+        <div id="view-exchange" class="app-view">
+          <!-- Top Navigation -->
+          <div class="view-navbar">
+            <button class="nav-back-btn" onclick="showView('view-rewards')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <h2 class="nav-title">Exchange</h2>
+            <div class="nav-spacer"></div>
+          </div>
+
+          <!-- Scrollable Content -->
+          <div class="view-scroll-content">
+            <!-- Balance Header in Exchange -->
+            <div class="exchange-balance-block">
+              <div class="ex-bal-label">TikTok Coins Balance</div>
+              <div class="ex-bal-number display-balance-usd">$8,573,020.22</div>
+              <div class="ex-bal-sub">
+                = <span class="display-balance-usd">$8,573,020.22</span>
+                ( <span class="tiktok-coin-icon-gold"></span> <span class="display-balance-coins">706,416,866</span> )
+              </div>
+              <div class="ex-bal-helper">Available balance to exchange the Coins</div>
+            </div>
+
+            <!-- TikTok Username Input Section -->
+            <div class="exchange-input-group">
+              <label class="exchange-section-title">TikTok username</label>
+              <div id="username-search-wrapper" class="input-handle-box">
+                <span class="handle-at">@</span>
+                <input type="text" id="input-tiktok-username" placeholder="your TikTok handle" autocomplete="off" spellcheck="false">
+                <button type="button" id="btn-clear-username" class="btn-clear-input" onclick="clearUsernameInput()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Real TikTok Loading State (Image 4 from first set) -->
+              <div id="user-loading-state" class="user-loading-box" style="display: none;">
+                <div class="loading-label" id="searching-label">Searching @...</div>
+                <div class="spinner-red-ring"></div>
+              </div>
+
+              <!-- Real TikTok Found Profile Card (Image 5 from first set) -->
+              <div id="user-profile-card" class="user-profile-card" style="display: none;">
+                <img id="user-avatar-img" class="user-avatar" src="" alt="TikTok Avatar" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=asxa'">
+                <div class="user-info-text">
+                  <div class="user-name-row">
+                    <span class="user-badge-heart">🧡</span>
+                    <span id="user-display-handle" class="user-handle-tag">@asxa</span>
+                  </div>
+                  <div class="user-stats-row">
+                    <span id="user-followers-count">45 followers</span>
+                    <span id="user-following-count">2 following</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Exchange earnings for Coins Presets -->
+            <div class="exchange-earnings-section">
+              <label class="exchange-section-title">Exchange earnings for Coins</label>
+              <div class="preset-cards-grid">
+                <!-- Preset 1 -->
+                <div class="preset-card" data-coins="250" data-usd="3.03" onclick="selectPreset(this)">
+                  <div class="preset-coins">
+                    <span class="tiktok-coin-icon-gold"></span>
+                    <span class="preset-coin-num">250</span>
+                  </div>
+                  <div class="preset-price">$3.03</div>
+                  <div class="card-loading-spinner" style="display: none;"></div>
+                </div>
+
+                <!-- Preset 2 (Selected by default in Image 1 set 2) -->
+                <div class="preset-card active" data-coins="500" data-usd="6.07" onclick="selectPreset(this)">
+                  <div class="preset-coins">
+                    <span class="tiktok-coin-icon-gold"></span>
+                    <span class="preset-coin-num">500</span>
+                  </div>
+                  <div class="preset-price">$6.07</div>
+                  <div class="card-loading-spinner" style="display: none;"></div>
+                </div>
+
+                <!-- Preset 3 -->
+                <div class="preset-card" data-coins="15000" data-usd="182.04" onclick="selectPreset(this)">
+                  <div class="preset-coins">
+                    <span class="tiktok-coin-icon-gold"></span>
+                    <span class="preset-coin-num">15,000</span>
+                  </div>
+                  <div class="preset-price">$182.04</div>
+                  <div class="card-loading-spinner" style="display: none;"></div>
+                </div>
+              </div>
+
+              <!-- Custom Amount Trigger -->
+              <div id="btn-custom-amount-trigger" class="custom-amount-trigger" onclick="openCustomAmountSheet()">
+                <span id="custom-amount-placeholder">Enter a custom number or amount</span>
+              </div>
+            </div>
+
+            <!-- Virtual Items & Rewards Policy Disclaimer -->
+            <div class="policy-disclaimer-card">
+              Coins obtained through this exchange are subject to our <strong>Virtual Items Policy</strong>. Since you are accepting your Rewards in the form of Coins, this exchange is also subject to our <strong>Rewards Policy</strong>. This exchange cannot be canceled or reversed.
+            </div>
+          </div>
+
+          <!-- Bottom Sticky Exchange Button -->
+          <div class="exchange-sticky-bottom">
+            <button id="btn-trigger-exchange" class="btn-primary-tiktok full" onclick="initiateExchange()">Exchange</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- SCREEN 4: CUSTOM AMOUNT NUMPAD BOTTOM SHEET (Image 2) -->
+    <div id="custom-sheet-overlay" class="bottom-sheet-overlay" style="display: none;" onclick="closeCustomAmountSheet(event)">
+      <div class="bottom-sheet-content" onclick="event.stopPropagation()">
+        <!-- Header -->
+        <div class="sheet-header">
+          <div class="sheet-title">Custom</div>
+          <button class="sheet-close-btn" onclick="closeCustomAmountSheet()">✕</button>
+        </div>
+
+        <!-- Dropdown select mode -->
+        <div class="sheet-type-dropdown">
+          <span>Number of Coins</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </div>
+
+        <!-- Custom Coin Display & All Button -->
+        <div class="custom-display-row">
+          <div class="custom-coin-left">
+            <span class="tiktok-coin-icon-gold lg"></span>
+            <span id="custom-coin-input-display" class="custom-number-text">2</span>
+          </div>
+          <button type="button" class="btn-all-coins" onclick="handleNumpadAll()">All</button>
+        </div>
+
+        <!-- Currency Equivalent line -->
+        <div class="custom-currency-equiv">
+          <span id="custom-equiv-eur">€0.02</span>
+          <span class="approx-symbol">≈</span>
+          <span id="custom-equiv-usd">$0.02</span>
+        </div>
+
+        <!-- Interactive Numpad Grid -->
+        <div class="numpad-grid">
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('1')">1</button>
+          <button type="button" class="numpad-key key-active-border" onclick="handleNumpadDigit('2')">2</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('3')">3</button>
+          <button type="button" class="numpad-key key-backspace" onclick="handleNumpadBackspace()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+              <line x1="18" y1="9" x2="12" y2="15"></line>
+              <line x1="12" y1="9" x2="18" y2="15"></line>
+            </svg>
+          </button>
+
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('4')">4</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('5')">5</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('6')">6</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('000')">000</button>
+
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('7')">7</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('8')">8</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('9')">9</button>
+          <button type="button" class="numpad-key" onclick="handleNumpadDigit('0')">0</button>
+        </div>
+
+        <!-- Numpad policy disclaimer -->
+        <div class="numpad-policy-text">
+          <span class="info-bubble">?</span>
+          <span id="numpad-calc-hint">€0.00 ≈ $0.00</span>
+          Coins obtained through this exchange are subject to our <strong>Virtual Items Policy...</strong>
+        </div>
+
+        <!-- Bottom Total & Action -->
+        <div class="sheet-bottom-action">
+          <div class="sheet-total-row">
+            <span class="total-label">Total</span>
+            <span id="sheet-total-val" class="total-val">$0.02</span>
+          </div>
+          <button id="btn-custom-sheet-exchange" class="btn-primary-tiktok full" onclick="submitCustomAmount()">Exchange</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SCREEN 5: CONFIRMATION MODAL (Image 3) -->
+    <div id="modal-confirm-exchange" class="dialog-backdrop" style="display: none;">
+      <div class="confirm-dialog-card">
+        <!-- Coin Celebration Graphic -->
+        <div class="celebration-badge">
+          <div class="confetti-sparkles">
+            <span class="sparkle s1">✨</span>
+            <span class="coin-center-float">
+              <span class="tiktok-coin-icon-gold xl"></span>
+            </span>
+            <span class="sparkle s2">🎉</span>
+          </div>
+        </div>
+
+        <h3 id="confirm-modal-title" class="confirm-modal-heading">Complete exchange for 288 Coins?</h3>
+        <p id="confirm-modal-desc" class="confirm-modal-sub">$3.48 will be deducted from estimated LIVE rewards</p>
+
+        <div class="confirm-modal-actions">
+          <button class="btn-dialog-back" onclick="closeConfirmModal()">Go back</button>
+          <button id="btn-confirm-complete" class="btn-dialog-complete" onclick="executeConfirmedExchange()">Complete</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SCREEN 6: EXCHANGE COMPLETED RECEIPT (Image 4 set 2) -->
+    <div id="modal-completed-receipt" class="dialog-backdrop" style="display: none;">
+      <div class="receipt-dialog-card">
+        <!-- Top Emerald Green Checkmark -->
+        <div class="receipt-success-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <h2 class="receipt-heading">Exchange Completed!</h2>
+        <div class="receipt-subtitle">
+          <span>You exchanged for</span>
+          <span class="tiktok-coin-icon-gold sm"></span>
+          <strong id="receipt-coins-highlight">288 Coins</strong>
+        </div>
+
+        <!-- Receipt Table -->
+        <div class="receipt-table">
+          <div class="receipt-row">
+            <span class="row-label">Recipient</span>
+            <span id="receipt-recipient-val" class="row-val">@asxa</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Coins Exchanged</span>
+            <span id="receipt-coins-val" class="row-val font-bold">288 Coins</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Deducted Amount</span>
+            <span id="receipt-deducted-val" class="row-val font-bold">$3.48</span>
+          </div>
+          <div class="receipt-row">
+            <span class="row-label">Time</span>
+            <span id="receipt-time-val" class="row-val font-bold">9/3/2026, 12:27:31 PM</span>
+          </div>
+        </div>
+
+        <!-- Gifter Level Promo Card -->
+        <div class="gifter-level-promo">
+          <div class="gifter-icon-box">
+            <svg class="tiktok-svg-small" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.86-4.47V8.69a8.18 8.18 0 0 0 4.91 1.63V6.87a4.9 4.9 0 0 1-1-.18z"/>
+            </svg>
+          </div>
+          <div class="gifter-promo-content">
+            <div class="gifter-title">Start gifter level</div>
+            <div class="gifter-desc">Send your first Gift to begin your gifter journey and unlock more rewards as you level up.</div>
+          </div>
+        </div>
+
+        <!-- Receipt Action Buttons -->
+        <div class="receipt-actions">
+          <button class="btn-receipt-back" onclick="closeReceiptAndRefresh()">← Go back</button>
+          <button class="btn-receipt-faded-exchange" disabled>Exchange</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SETTINGS & CUSTOMIZATION MODAL -->
+    <div id="modal-settings" class="dialog-backdrop" style="display: none;" onclick="closeSettingsModal(event)">
+      <div class="settings-dialog-card" onclick="event.stopPropagation()">
+        <div class="settings-modal-header">
+          <h3>Display & Workspace Settings</h3>
+          <button class="sheet-close-btn" onclick="closeSettingsModal()">✕</button>
+        </div>
+        <div class="settings-body">
+          <div class="form-group">
+            <label>Available Rewards Balance ($ USD)</label>
+            <input type="number" id="setting-balance-usd" step="0.01" value="8573020.22" class="setting-input">
+          </div>
+          <div class="form-group">
+            <label>Upcoming Rewards ($ USD)</label>
+            <input type="number" id="setting-upcoming-usd" step="0.01" value="167290.62" class="setting-input">
+          </div>
+          <div class="form-group">
+            <label>Default Recipient Handle</label>
+            <input type="text" id="setting-default-handle" value="asxa" class="setting-input">
+          </div>
+        </div>
+        <div class="settings-footer">
+          <button class="btn-dialog-back" onclick="resetDefaults()">Reset Defaults</button>
+          <button class="btn-dialog-complete" onclick="saveSettings()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
