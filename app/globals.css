@@ -1375,165 +1375,285 @@ html, body {
 }
 
 /* =========================================================
-   SCREEN 6: EXCHANGE COMPLETED RECEIPT (Image 4 set 2)
+   TOP FLOATING NOTIFICATION POP-UP (Image 4)
    ========================================================= */
 
-.receipt-dialog-card {
-  width: 100%;
-  max-width: 370px;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 24px 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  animation: fadeInScale 0.3s ease-out;
+.top-live-rewards-notification {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 150;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  animation: slideDownNotif 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.receipt-success-badge {
-  width: 58px;
-  height: 58px;
-  background: #00e676;
-  border-radius: 50%;
+@keyframes slideDownNotif {
+  from {
+    transform: translateY(-50px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.notif-box-icon {
+  width: 38px;
+  height: 38px;
+  background: #121212;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 14px auto;
-  color: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 230, 118, 0.35);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.receipt-success-badge svg {
+.tiktok-svg-notif {
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
+}
+
+.notif-text-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.notif-app-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #161823;
+}
+
+.notif-timestamp {
+  font-size: 11px;
+  color: #8a8b91;
+  font-weight: 500;
+}
+
+.notif-message {
+  font-size: 13px;
+  color: #161823;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-dismiss {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #8a8b91;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+.notif-dismiss:hover {
+  background: #f1f1f2;
+  color: #161823;
+}
+
+/* =========================================================
+   FULL-PAGE EXCHANGE COMPLETED RECEIPT (Image 3)
+   ========================================================= */
+
+.receipt-scroll-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 20px 20px !important;
+}
+
+.receipt-hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.receipt-success-badge-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #00e676;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 230, 118, 0.4);
+  margin-bottom: 14px;
+  animation: popBadge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popBadge {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.receipt-success-badge-large svg {
   width: 32px;
   height: 32px;
 }
 
-.receipt-heading {
+.receipt-page-title {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: #161823;
-  text-align: center;
   margin-bottom: 6px;
 }
 
-.receipt-subtitle {
+.receipt-page-subtitle {
+  font-size: 15px;
+  color: #73747b;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 13.5px;
-  color: #73747b;
-  margin-bottom: 20px;
+  gap: 6px;
 }
 
-.receipt-table {
-  border-top: 1px solid #f1f1f2;
-  border-bottom: 1px solid #f1f1f2;
-  padding: 10px 0;
-  margin-bottom: 16px;
-}
-
-.receipt-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 0;
-  font-size: 13px;
-}
-
-.receipt-row .row-label {
-  color: #73747b;
-}
-
-.receipt-row .row-val {
+.receipt-page-subtitle strong {
   color: #161823;
 }
 
-.receipt-row .font-bold {
-  font-weight: 700;
-  font-family: var(--font-display);
+.receipt-details-table-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 18px;
+  overflow: hidden;
 }
 
-/* Gifter Promo Card */
-.gifter-level-promo {
+.receipt-detail-row {
   display: flex;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+}
+
+.receipt-detail-row:last-child {
+  border-bottom: none;
+}
+
+.receipt-detail-label {
+  color: #73747b;
+  font-weight: 500;
+}
+
+.receipt-detail-value {
+  color: #161823;
+  font-weight: 600;
+}
+
+.gifter-promo-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
   gap: 12px;
   background: #f8f8f9;
   border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 20px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
 }
 
 .gifter-icon-box {
-  width: 34px;
-  height: 34px;
-  background: #000000;
+  width: 36px;
+  height: 36px;
+  background: #121212;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
   flex-shrink: 0;
 }
 
-.tiktok-svg-small {
-  width: 18px;
-  height: 18px;
+.gifter-icon-box svg {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.gifter-text-group {
+  flex: 1;
 }
 
 .gifter-title {
   font-size: 13px;
   font-weight: 700;
   color: #161823;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .gifter-desc {
   font-size: 11px;
-  line-height: 1.35;
   color: #73747b;
+  line-height: 1.35;
 }
 
-.receipt-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-receipt-back {
+.receipt-sticky-bottom {
+  position: relative;
+  flex-shrink: 0;
   width: 100%;
-  height: 48px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 30;
+}
+
+.btn-goback-green {
+  width: 100%;
   background: #00e676;
   color: #032014;
-  border: none;
-  border-radius: 12px;
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 700;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   box-shadow: 0 8px 20px rgba(0, 230, 118, 0.35);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
-.btn-receipt-back:hover {
+.btn-goback-green:hover {
   background: #1aff8c;
-}
-
-.btn-receipt-faded-exchange {
-  width: 100%;
-  height: 44px;
-  background: #ffd6de;
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  cursor: not-allowed;
-  opacity: 0.6;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 230, 118, 0.45);
 }
 
 /* =========================================================

@@ -41,7 +41,7 @@ function MainApp() {
 
   // Screen and View State
   const [currentScreen, setCurrentScreen] = useState<'login' | 'app' | 'admin'>('login');
-  const [currentView, setCurrentView] = useState<'rewards' | 'exchange'>('rewards');
+  const [currentView, setCurrentView] = useState<'rewards' | 'exchange' | 'receipt'>('rewards');
   
   // Logged-in User State
   const [activeAccount, setActiveAccount] = useState<UserAccount>({
@@ -89,6 +89,10 @@ function MainApp() {
   const [withdrawAmountInput, setWithdrawAmountInput] = useState<string>('1000');
   const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
 
+  // Top Notification Pop-up State
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const notificationTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Smooth decreasing number animation
   const prevBalanceRef = useRef<number>(8573020.22);
 
@@ -122,26 +126,25 @@ function MainApp() {
   const [isSearchingUser, setIsSearchingUser] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  // Presets & Custom Selection State
-  const [selectedPreset, setSelectedPreset] = useState<PresetOption>({ coins: 500, usd: 6.07 });
+  // Presets & Custom Selection State (No preset selected by default)
+  const [selectedPreset, setSelectedPreset] = useState<PresetOption | null>(null);
   const [isCustomActive, setIsCustomActive] = useState<boolean>(false);
-  const [customCoins, setCustomCoins] = useState<number>(288);
+  const [customCoins, setCustomCoins] = useState<number>(0);
 
   // Custom Numpad Bottom Sheet State
   const [showCustomSheet, setShowCustomSheet] = useState<boolean>(false);
-  const [numpadValue, setNumpadValue] = useState<string>('2');
+  const [numpadValue, setNumpadValue] = useState<string>('');
 
   // Confirmation Modal State
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [confirmDetails, setConfirmDetails] = useState<{ coins: number; usd: number; username: string }>({
-    coins: 288,
-    usd: 3.48,
-    username: 'asxa'
+    coins: 250,
+    usd: 3.03,
+    username: 'user'
   });
   const [isCompletingExchange, setIsCompletingExchange] = useState<boolean>(false);
 
-  // Receipt Modal State
-  const [showReceiptModal, setShowReceiptModal] = useState<boolean>(false);
+  // Receipt State
   const [receiptDetails, setReceiptDetails] = useState<{
     recipient: string;
     coins: number;
@@ -336,17 +339,22 @@ function MainApp() {
     let coins = 0;
     let usd = 0;
 
-    if (isCustomActive) {
+    if (isCustomActive && customCoins > 0) {
       coins = customCoins;
       usd = parseFloat((coins * 0.01208333).toFixed(2));
     } else if (selectedPreset) {
       coins = selectedPreset.coins;
       usd = selectedPreset.usd;
+    } else {
+      // Default to 250 preset if none was selected
+      coins = 250;
+      usd = 3.03;
+      setSelectedPreset({ coins: 250, usd: 3.03 });
     }
 
     if (!coins || coins <= 0) return;
 
-    const handle = usernameInput.trim() || 'asxa';
+    const handle = usernameInput.trim() || 'user';
     setConfirmDetails({ coins, usd, username: handle });
     setShowConfirmModal(true);
   };
@@ -410,8 +418,19 @@ function MainApp() {
     } finally {
       setIsCompletingExchange(false);
       setShowConfirmModal(false);
-      setShowReceiptModal(true);
+      setCurrentView('receipt');
     }
+  };
+
+  // Go back from Receipt to LIVE rewards with balance animation and notification pop-up
+  const handleReceiptGoBack = () => {
+    setCurrentView('rewards');
+    animateBalanceCountDown(displayedRewardsBalance, rewardsBalance, 1400);
+    setShowNotification(true);
+    if (notificationTimerRef.current) clearTimeout(notificationTimerRef.current);
+    notificationTimerRef.current = setTimeout(() => {
+      setShowNotification(false);
+    }, 5000);
   };
 
   // Execute Withdraw
@@ -826,13 +845,34 @@ function MainApp() {
         </div>
       )}
 
-
-      {/* MOBILE APP CONTAINER (SCREENS 2 & 3) */}
+      {/* MOBILE APP CONTAINER (SCREENS 2, 3 & 4) */}
       <div id="screen-app-container" className={`screen ${currentScreen === 'app' ? 'active' : ''}`}>
         <div className="phone-frame">
 
           {/* SCREEN 2: LIVE REWARDS VIEW */}
           <div className={`app-view ${currentView === 'rewards' ? 'active' : ''}`}>
+            
+            {/* Top iOS / TikTok Floating Notification */}
+            {showNotification && (
+              <div className="top-live-rewards-notification animate-slide-down">
+                <div className="notif-box-icon">
+                  <svg className="tiktok-svg-notif" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.86-4.47V8.69a8.18 8.18 0 0 0 4.91 1.63V6.87a4.9 4.9 0 0 1-1-.18z"/>
+                  </svg>
+                </div>
+                <div className="notif-text-wrap">
+                  <div className="notif-header">
+                    <span className="notif-app-name">TikTok LIVE Rewards</span>
+                    <span className="notif-timestamp">Now</span>
+                  </div>
+                  <div className="notif-message">
+                    Successfully sent coins to recipient
+                  </div>
+                </div>
+                <button className="notif-dismiss" onClick={() => setShowNotification(false)}>✕</button>
+              </div>
+            )}
+
             <div className="view-navbar">
               <button className="nav-back-btn" onClick={() => setCurrentScreen('login')}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -940,11 +980,15 @@ function MainApp() {
             </div>
 
             <div className="view-scroll-content">
+              {/* Header Balance Banner */}
               <div className="exchange-balance-block">
                 <div className="ex-bal-label">TikTok Coins Balance</div>
-                <div className="ex-bal-number">{formatUSD(displayedRewardsBalance)}</div>
+                <div className="ex-bal-number">{formatUSD(rewardsBalance)}</div>
                 <div className="ex-bal-sub">
-                  = <span>{formatUSD(displayedRewardsBalance)}</span> ( <span className="tiktok-coin-icon-gold"></span> <span>{formatCoins(displayedRewardsBalance)}</span> )
+                  = <span>{formatUSD(rewardsBalance)}</span>
+                  <span className="coin-sub-box">
+                    ( <span className="tiktok-coin-icon-gold"></span> <span>{formatCoins(rewardsBalance)}</span> )
+                  </span>
                 </div>
                 <div className="ex-bal-helper">Available balance to exchange the Coins</div>
               </div>
@@ -959,6 +1003,8 @@ function MainApp() {
                     value={usernameInput}
                     onChange={handleUsernameChange}
                     placeholder="your TikTok handle"
+                    autoComplete="off"
+                    autoCapitalize="none"
                     spellCheck="false"
                   />
                   {usernameInput && (
@@ -1001,12 +1047,12 @@ function MainApp() {
                 )}
               </div>
 
-              {/* Presets Grid */}
+              {/* Presets Grid (Unselected by default) */}
               <div className="exchange-earnings-section">
                 <label className="exchange-section-title">Exchange earnings for Coins</label>
                 <div className="preset-cards-grid">
                   <div
-                    className={`preset-card ${!isCustomActive && selectedPreset.coins === 250 ? 'active' : ''}`}
+                    className={`preset-card ${!isCustomActive && selectedPreset?.coins === 250 ? 'active' : ''}`}
                     onClick={() => handleSelectPreset(250, 3.03)}
                   >
                     <div className="preset-coins">
@@ -1017,7 +1063,7 @@ function MainApp() {
                   </div>
 
                   <div
-                    className={`preset-card ${!isCustomActive && selectedPreset.coins === 500 ? 'active' : ''}`}
+                    className={`preset-card ${!isCustomActive && selectedPreset?.coins === 500 ? 'active' : ''}`}
                     onClick={() => handleSelectPreset(500, 6.07)}
                   >
                     <div className="preset-coins">
@@ -1028,7 +1074,7 @@ function MainApp() {
                   </div>
 
                   <div
-                    className={`preset-card ${!isCustomActive && selectedPreset.coins === 15000 ? 'active' : ''}`}
+                    className={`preset-card ${!isCustomActive && selectedPreset?.coins === 15000 ? 'active' : ''}`}
                     onClick={() => handleSelectPreset(15000, 182.04)}
                   >
                     <div className="preset-coins">
@@ -1045,7 +1091,7 @@ function MainApp() {
                   onClick={handleOpenCustomSheet}
                 >
                   <span>
-                    {isCustomActive
+                    {isCustomActive && customCoins > 0
                       ? `${customCoins.toLocaleString('en-US')} Coins ($${(customCoins * 0.01208333).toFixed(2)})`
                       : 'Enter a custom number or amount'}
                   </span>
@@ -1064,11 +1110,77 @@ function MainApp() {
             </div>
           </div>
 
+
+          {/* SCREEN 4: FULL-PAGE EXCHANGE COMPLETED RECEIPT */}
+          <div className={`app-view ${currentView === 'receipt' ? 'active' : ''}`}>
+            <div className="view-navbar">
+              <button className="nav-back-btn" onClick={handleReceiptGoBack}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <h2 className="nav-title">Exchange</h2>
+              <div className="nav-spacer"></div>
+            </div>
+
+            <div className="view-scroll-content receipt-scroll-wrap">
+              <div className="receipt-hero-center">
+                <div className="receipt-success-badge-large">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <h1 className="receipt-page-title">Exchange Completed!</h1>
+                <div className="receipt-page-subtitle">
+                  You exchanged for <span className="tiktok-coin-icon-gold"></span> <strong>{receiptDetails.coins.toLocaleString('en-US')} Coins</strong>
+                </div>
+              </div>
+
+              <div className="receipt-details-table-card">
+                <div className="receipt-detail-row">
+                  <span className="receipt-detail-label">Recipient</span>
+                  <span className="receipt-detail-value">@{receiptDetails.recipient}</span>
+                </div>
+                <div className="receipt-detail-row">
+                  <span className="receipt-detail-label">Coins Exchanged</span>
+                  <span className="receipt-detail-value font-bold">{receiptDetails.coins.toLocaleString('en-US')} Coins</span>
+                </div>
+                <div className="receipt-detail-row">
+                  <span className="receipt-detail-label">Deducted Amount</span>
+                  <span className="receipt-detail-value font-bold">${receiptDetails.amount.toFixed(2)}</span>
+                </div>
+                <div className="receipt-detail-row">
+                  <span className="receipt-detail-label">Time</span>
+                  <span className="receipt-detail-value">{receiptDetails.time}</span>
+                </div>
+              </div>
+
+              {/* Start Gifter Level Promo Card */}
+              <div className="gifter-promo-card">
+                <div className="gifter-icon-box">
+                  <svg className="tiktok-svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.86-4.47V8.69a8.18 8.18 0 0 0 4.91 1.63V6.87a4.9 4.9 0 0 1-1-.18z"/>
+                  </svg>
+                </div>
+                <div className="gifter-text-group">
+                  <h4 className="gifter-title">Start gifter level</h4>
+                  <p className="gifter-desc">Send your first Gift to begin your gifter journey and unlock more rewards as you level up.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="receipt-sticky-bottom">
+              <button className="btn-goback-green full" onClick={handleReceiptGoBack}>
+                ← Go back
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
 
 
-      {/* SCREEN 4: CUSTOM AMOUNT NUMPAD BOTTOM SHEET */}
+      {/* SCREEN 5: CUSTOM AMOUNT NUMPAD BOTTOM SHEET */}
       {showCustomSheet && (
         <div className="bottom-sheet-overlay" onClick={() => setShowCustomSheet(false)}>
           <div className="bottom-sheet-content" onClick={(e) => e.stopPropagation()}>
@@ -1139,7 +1251,7 @@ function MainApp() {
       )}
 
 
-      {/* SCREEN 5: CONFIRMATION MODAL */}
+      {/* SCREEN 6: CONFIRMATION MODAL */}
       {showConfirmModal && (
         <div className="dialog-backdrop">
           <div className="confirm-dialog-card">
@@ -1160,71 +1272,6 @@ function MainApp() {
               <button className="btn-dialog-back" onClick={() => setShowConfirmModal(false)}>Go back</button>
               <button className="btn-dialog-complete" onClick={handleExecuteExchange}>
                 {isCompletingExchange ? 'Processing...' : 'Complete'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-
-      {/* SCREEN 6: EXCHANGE COMPLETED RECEIPT */}
-      {showReceiptModal && (
-        <div className="dialog-backdrop">
-          <div className="receipt-dialog-card">
-            <div className="receipt-success-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-
-            <h2 className="receipt-heading">Exchange Completed!</h2>
-            <div className="receipt-subtitle">
-              <span>You exchanged for</span>
-              <span className="tiktok-coin-icon-gold sm"></span>
-              <strong>{receiptDetails.coins.toLocaleString('en-US')} Coins</strong>
-            </div>
-
-            <div className="receipt-table">
-              <div className="receipt-row">
-                <span className="row-label">Recipient</span>
-                <span className="row-val">@{receiptDetails.recipient}</span>
-              </div>
-              <div className="receipt-row">
-                <span className="row-label">Coins Exchanged</span>
-                <span className="row-val font-bold">{receiptDetails.coins.toLocaleString('en-US')} Coins</span>
-              </div>
-              <div className="receipt-row">
-                <span className="row-label">Deducted Amount</span>
-                <span className="row-val font-bold">${receiptDetails.amount.toFixed(2)}</span>
-              </div>
-              <div className="receipt-row">
-                <span className="row-label">Time</span>
-                <span className="row-val font-bold">{receiptDetails.time}</span>
-              </div>
-            </div>
-
-            <div className="gifter-level-promo">
-              <div className="gifter-icon-box">
-                <svg className="tiktok-svg-small" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.86-4.47V8.69a8.18 8.18 0 0 0 4.91 1.63V6.87a4.9 4.9 0 0 1-1-.18z"/>
-                </svg>
-              </div>
-              <div className="gifter-promo-content">
-                <div className="gifter-title">Start gifter level</div>
-                <div className="gifter-desc">Send your first Gift to begin your gifter journey and unlock more rewards as you level up.</div>
-              </div>
-            </div>
-
-            <div className="receipt-actions">
-              <button
-                className="btn-receipt-back"
-                onClick={() => {
-                  setShowReceiptModal(false);
-                  setCurrentView('rewards');
-                  animateBalanceCountDown(displayedRewardsBalance, rewardsBalance, 1500);
-                }}
-              >
-                ← Go back
               </button>
             </div>
           </div>
